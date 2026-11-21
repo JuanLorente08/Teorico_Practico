@@ -26,18 +26,68 @@ public class BarJavier_Video {
             float importe = Float.parseFloat(st.nextToken());
             // D 2.80
             if (textoCategoria.equals("N") && importe == 0.0f){
-
+                String resultado = procesarDia(sumaPorCategoria, contEntradasPorCategoria);
             }else{
                 char codigo = textoCategoria.charAt(0);
                 int posQueOcupaCategoria = getPosCategoria(codigo);
                 if (posQueOcupaCategoria>0){
-                    anadirVenta(sumaPorCategoria, posQueOcupaCategoria);
+                    anadirVenta(sumaPorCategoria, posQueOcupaCategoria, importe, contEntradasPorCategoria);
                 }
             }
         }
     }
-    static void anadirVenta(float[]sumaParcial, int pos, int importe){
-        sumaParcial[pos]=sumaParcial[pos] + importe;
+    static float mediaComida(float[]sum, int[]cont){
+        int pos = getPosCategoria('A');
+        return (sum[pos] / cont[pos]);
+    }
+
+
+    static float mediaTotalDia(float[]sum, int[]cont){
+        float sumaTotal = 0.0f;
+        int contTotal = 0;
+
+        for (int i = 0; i < sum.length; i++) {
+            sumaTotal += sumaTotal + sum[i];
+            contTotal += contTotal + cont[i];
+        }
+        return sumaTotal/contTotal;
+    }
+
+
+
+    static float getMax(float[]sum, int[]cont){
+        float vMax = sum[0];
+
+        for (int i = 0; i < sum.length; i++) {
+            if (vMax < sum[i]){
+                vMax = sum[i];
+            }
+        }
+        return vMax;
+    }
+    static float getMin(float[]sum){
+        float vMin = sum[0];
+        for (int i = 0; i < sum.length; i++) {
+            if (vMin > sum[i]){
+                vMin = sum[i];
+            }
+        }
+        return vMin;
+    }
+    static String procesarDia(float[] sum, int[] contador){
+        float max = getMax(sum, contador);
+        float min = getMin(sum);
+
+        float mediaA = mediaComida(sum, contador);
+        float mediaTotal = mediaTotalDia(sum, contador);
+
+        // If avreviado
+        String supera = (mediaA > mediaTotal) ?"Si" :"No" ;
+        return max + "#" + min + "#" + supera;
+    }
+    static void anadirVenta(float[]sumaParcial, int pos, float importe, int[] cont){
+        sumaParcial[pos] = sumaParcial[pos] + importe;
+        cont[pos] = cont[pos] + 1;
     }
     static int getPosCategoria(char cod){
         for (int i = 0; i < codes.length; i++) {
